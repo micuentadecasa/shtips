@@ -1,0 +1,13 @@
+
+<SharePoint:SPSecurityTrimmedControl ID="SPSecurityTrimmedControlName" PermissionsString="FullMask" runat="server">
+  <SharePoint:MenuItemTemplate runat="server" id="MenuItem_ViewAllSiteContents"
+							  Text="<%$Resources:wss,quiklnch_allcontent_15%>"
+							  Description="<%$Resources:wss,siteactions_allcontentdescription%>"
+							  ImageUrl="/_layouts/15/images/allcontent32.png?rev=23"
+							  MenuGroupId="200"
+							  Sequence="240"
+							  UseShortId="true"
+							  ClientOnClickNavigateUrl="~siteLayouts/viewlsts.aspx"
+							  PermissionsString="FullMask"
+							  PermissionMode="Any" />
+							</SharePoint:SPSecurityTrimmedControl>   
