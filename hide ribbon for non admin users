@@ -1,0 +1,15 @@
+https://support.bind.pt/hc/en-us/articles/204448249-How-can-I-hide-the-Office-365-SharePoint-2013-suite-and-ribbon-bars-for-anonymous-users-
+
+en mi caso he puesto un spsecuritytrimmedcontrol antes del div suiteBarButtons..
+
+ <SharePoint:AjaxDelta runat="server" ID="DeltaSuiteBarRight" CssClass="ms-core-deltaSuiteBarRight" BlockElement="true">
+                <div id="welcomeMenuBox">
+                    <wssuc:Welcome id="IdWelcome" runat="server" EnableViewState="false" />
+                </div>
+                <SharePoint:SPSecurityTrimmedControl ID="SPSecurityTrimmedControlName2" PermissionsString="FullMask" runat="server">
+                    <div id="suiteBarButtons">
+                        <span class="ms-siteactions-root" id="siteactiontd">
+                            <SharePoint:SiteActions runat="server" AccessKey="<%$Resources:wss,tb_SiteActions_AK%>" ID="SiteActionsMenuMain"
+                                PrefixHtml=""
+                                
+ tambien podemos hacerlo en cualquiera de los elementos pero no funciona por ejemplo para el de "edit page"
