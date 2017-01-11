@@ -1,0 +1,15 @@
+https://blog.splibrarian.com/2014/04/20/disable-edit-link/
+
+el problema es que por defecto los usuarios en 2013 tienen permiso contribute en la librería "site pages", hay que dejar de heredar y modificar esos permisos..
+
+Here are the steps to modify the permissions for your Site Pages library:
+
+Go to your site.
+Click on Gear > Site contents.
+Find and click on your Site Pages library.
+Click on the Library tab and then click on the Library Settings button.
+Click on the Permissions for this document library link.
+Click on the Stop Inheriting Permissions button on the page’s toolbar.
+Say OK to confirm you want to customize the permissions for this library.
+Modify the library’s permissions as desired.
+TIP: Make sure you give users read access to your Site Pages library. This will ensure they can see and access your site’s home page.
