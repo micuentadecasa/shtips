@@ -1,0 +1,1 @@
+la master ya carga jQuery, el problema era que al cargar otro jquery SPServices deja de funcionar
