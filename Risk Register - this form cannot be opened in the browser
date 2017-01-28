@@ -1,0 +1,63 @@
+El problema que aparece es que al mover un form de InfoPath de un sitio a otro la url que lleva implícita ya no es la misma y hay que ejecutar un script para cambiar la url.
+Este es el script PowerShell que parece que utilizaron para arreglarlo:
+
+http://www.spjeff.com/2012/12/19/sprelinkdocuments-powershell-remix/
+
+[Reflection.Assembly]::LoadWithPartialName("Microsoft.SharePoint.Utilities")
+
+#Parameters
+$webUrl = "http://ungsc-raso-01"
+[guid]$listID = "5599AA01-E87D-4240-9FDC-0803999B6224"
+
+#Intialize
+$spWeb = (Get-SPSite $webUrl).OpenWeb()
+$spList = $spWeb.Lists[$listID]
+[Microsoft.SharePoint.SPDocumentLibrary] $doclib = [Microsoft.SharePoint.SPDocumentLibrary]$spList
+$solutionUrl = [Microsoft.SharePoint.Utilities.SPHttpUtility]::UrlPathEncode($spWeb.Url + "/" + $doclib.DocumentTemplateUrl, $true)
+$i=0
+$total = $doclib.Items.Count
+
+#Loop through the list items
+foreach($spItem in $doclib.Items) {
+
+	#Progress Bar
+	$i++;
+	Write-Progress -Activity "Relinking documents " -Status ("item: " + $spItem.Name + " (" + [math]::truncate(($i/$total)*100) + "%)") -PercentComplete (($i/$total)*100)
+
+	#Reapply Field Values
+	$spFields = $spItem.Fields
+	foreach ($spField in $spFields) { #loop through fields resetting them
+		if ($spField.Type -ne [Microsoft.SharePoint.SPFieldType]::Computed -and
+            $spField.Type -ne [Microsoft.SharePoint.SPFieldType]::Invalid -and
+			!$spField.ReadOnlyField) {
+			try {
+				$spItem[$spField.InternalName] = $spItem[$spField.InternalName]
+			} catch {
+			}
+		}
+	}
+	
+	#Reapply Content Type
+	$spContentType = $spList.ContentTypes[$spItem["ContentTypeId"]]
+	if ($spContentType -ne $null) { #try to update the item with the content type's template url which is the updated one
+		if ($spContentType.DocumentTemplate.StartsWith("http://") -or
+	        $spContentType.DocumentTemplate.StartsWith("https://"))
+			{
+	            $spItem["TemplateUrl"] =  [Microsoft.SharePoint.Utilities.SPHttpUtility]::UrlPathEncode($spContentType.DocumentTemplate, $true);
+	        }
+	        elseif ($spContentType.DocumentTemplate.StartsWith("/"))
+	        {
+	            $spItem["TemplateUrl"] =  [Microsoft.SharePoint.Utilities.SPHttpUtility]::UrlPathEncode($spWeb.Site.MakeFullUrl($spContentType.DocumentTemplate), $true);
+	        }
+	        else
+	        {
+	            $spItem["TemplateUrl"] =  [Microsoft.SharePoint.Utilities.SPHttpUtility]::UrlPathEncode($spWeb.Url + '/' + $spList.RootFolder + '/' + $spContentType.DocumentTemplate, $true);
+	        }
+	}
+    else #no content type found so default template url to solution Url
+    {
+        $spItem["TemplateUrl"] = $solutionUrl;
+    }
+	
+    $spItem.Update();
+}
