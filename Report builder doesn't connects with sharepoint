@@ -1,0 +1,2 @@
+once installed report builder if I try to open reportbuilder it says that it can not connect with sharepoint server. The problem was that 
+a new application reporting services was created but it was stopped, I started in Central administration, manage Services on server.. 
