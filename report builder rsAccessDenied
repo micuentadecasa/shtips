@@ -1,0 +1,12 @@
+when trying to create a new connection with report builder and entering credentials I got rsAccessDenied or when trying to access
+
+http://spraso/_vti_bin/ReportServer and entering to any directory I got a rsAccessDenied
+
+the problem is that the user I was trying to use has no user mappings on the databases of reporting, so:
+
+In credentials use spadmin (use this user name and password option), check "use as window credentials" 
+In General use Microsoft sharepoint list as type of connection and http://spraso as connection string
+
+when using a user check their permissions in Sql server reporting services databases.
+
+a la hora de 
