@@ -1,0 +1,28 @@
+en este artículo viene como poner un botón para entrar como otro usuario..
+
+http://strangelittletech.blogspot.com.es/2014/06/sign-in-as-different-user-in-sharepoint.html
+
+1. Navigate to C:\Program Files\Common Files\microsoft shared\Web Server Extensions\15\TEMPLATE\CONTROLTEMPLATES using windows explorer.
+
+2. Scroll to the bottom and double click the Welcome ASCX File and open it with notepad.
+
+
+
+
+3. Locate the “ID_RequestAccess” element.
+
+
+
+
+4. Go up one line and hit enter to create a space between “/>” and the “ID_RequestAccess” line. Add the following code:
+
+<SharePoint:MenuItemTemplate runat="server" ID="ID_LoginAsDifferentUser"  
+Text="<%$Resources:wss,personalactions_loginasdifferentuser%>"    
+Description="<%$Resources:wss,personalactions_loginasdifferentuserdescription%>"    
+MenuGroupId="100"   Sequence="100"   UseShortId="true"   />
+
+
+
+
+
+5. Close the Welcome file after saving changes. Refresh the website.
