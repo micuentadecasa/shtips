@@ -1,0 +1,254 @@
+http://www.vrdmn.com/2013/07/batch-operations-using-javascript.html
+
+Batch Operations using the JavaScript Client Object Model
+To improve performance and to reduce the time taken for data to travel over the wire, we can do batch operations using the Client Object Model in SharePoint. This can really help in reducing load time of pages and make the user experience better. Batch operations can be done using the .NET as well as the JavaScript Client Object Model. In this post, we are going to focus on how to perform batch operations using the JavaScript Client Object Model. In each of the following operations, only one call from the client to server will be made. It will contain all the information needed to perform the necessary operation. So without further ado, here is the code:
+
+1) Batch Add Items to List:
+
+function createListItems() {
+    
+    var itemArray = [];
+    var clientContext = SP.ClientContext.get_current();
+    var oList = clientContext.get_web().get_lists().getByTitle('TestList');
+        
+    
+    for(var i = 0; i< 5; i++){
+    
+        var itemCreateInfo = new SP.ListItemCreationInformation();
+        var oListItem = oList.addItem(itemCreateInfo);  
+        oListItem.set_item('Title', 'My New Item!' + i);  
+        oListItem.update();
+        itemArray[i] = oListItem;
+        clientContext.load(itemArray[i]);
+    }
+    
+    clientContext.executeQueryAsync(onQuerySucceeded, onQueryFailed);
+}
+
+function onQuerySucceeded() {
+
+    alert('Items created');
+}
+
+function onQueryFailed(sender, args) {
+
+    alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+}
+createListItems();
+view rawbatchadd.js hosted with ❤ by GitHub
+
+
+2) Batch Update Items from List:
+function updateListItems() {
+    
+    var itemArray = [];
+    var clientContext = SP.ClientContext.get_current();
+    var oList = clientContext.get_web().get_lists().getByTitle('TestList');
+        
+    
+    for(var i = 1; i<= 5; i++){
+    
+        var oListItem = oList.getItemById(i);  
+        oListItem.set_item('Title', 'My Updated Item!' + i);  
+        oListItem.update();
+        itemArray[i] = oListItem;
+        clientContext.load(itemArray[i]);
+    }
+    
+    clientContext.executeQueryAsync(onQuerySucceeded, onQueryFailed);
+}
+
+function onQuerySucceeded() {
+
+    alert('Items Updated');
+}
+
+function onQueryFailed(sender, args) {
+
+    alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+}
+updateListItems();
+view rawbatchupdate.js hosted with ❤ by GitHub
+
+
+3) Batch Delete Items from List:
+function deleteListItems() {
+    
+    var clientContext = SP.ClientContext.get_current();
+    var oList = clientContext.get_web().get_lists().getByTitle('TestList');
+        
+    
+    for(var i = 0; i<= 5; i++){
+    
+        var oListItem = oList.getItemById(i);  
+        oListItem.deleteObject();
+    }
+    
+    clientContext.executeQueryAsync(onQuerySucceeded, onQueryFailed);
+}
+
+function onQuerySucceeded() {
+
+    alert('Items Deleted');
+}
+
+function onQueryFailed(sender, args) {
+
+    alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+}
+deleteListItems();
+view rawbatchdelete.js hosted with ❤ by GitHub
+Now let us analyze what happens behind the scenes when we make one of these batch operations. Here is the firebug screen grab of the call to batch create 5 items:
+
+
+
+Now as you can see, only one call is made from the client to the server. It contains all the XML necessary for creating the 5 items. Here is the relevant XML:
+<Request xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Javascript Library">
+	<Actions>
+		<ObjectPath Id="41" ObjectPathId="40"></ObjectPath>
+		<Method Name="SetFieldValue" Id="42" ObjectPathId="40">
+			<Parameters>
+				<Parameter Type="String">Title</Parameter>
+				<Parameter Type="String">My New Item!0</Parameter>
+			</Parameters>
+		</Method>
+		<Method Name="Update" Id="43" ObjectPathId="40"></Method>
+		<Query Id="44" ObjectPathId="40">
+			<Query SelectAllProperties="true">
+				<Properties>
+					<Property Name="FileSystemObjectType" ScalarProperty="true"></Property>
+					<Property Name="Id" ScalarProperty="true"></Property>
+					<Property Name="Title" ScalarProperty="true"></Property>
+				</Properties>
+			</Query>
+		</Query>
+		<ObjectPath Id="46" ObjectPathId="45"></ObjectPath>
+		<Method Name="SetFieldValue" Id="47" ObjectPathId="45">
+			<Parameters>
+				<Parameter Type="String">Title</Parameter>
+				<Parameter Type="String">My New Item!1</Parameter>
+			</Parameters>
+		</Method>
+		<Method Name="Update" Id="48" ObjectPathId="45"></Method>
+		<Query Id="49" ObjectPathId="45">
+			<Query SelectAllProperties="true">
+				<Properties>
+					<Property Name="FileSystemObjectType" ScalarProperty="true"></Property>
+					<Property Name="Id" ScalarProperty="true"></Property>
+					<Property Name="Title" ScalarProperty="true"></Property>
+				</Properties>
+			</Query>
+		</Query>
+		<ObjectPath Id="51" ObjectPathId="50"></ObjectPath>
+		<Method Name="SetFieldValue" Id="52" ObjectPathId="50">
+			<Parameters>
+				<Parameter Type="String">Title</Parameter>
+				<Parameter Type="String">My New Item!2</Parameter>
+			</Parameters>
+		</Method>
+		<Method Name="Update" Id="53" ObjectPathId="50"></Method>
+		<Query Id="54" ObjectPathId="50">
+			<Query SelectAllProperties="true">
+				<Properties>
+					<Property Name="FileSystemObjectType" ScalarProperty="true"></Property>
+					<Property Name="Id" ScalarProperty="true"></Property>
+					<Property Name="Title" ScalarProperty="true"></Property>
+				</Properties>
+			</Query>
+		</Query>
+		<ObjectPath Id="56" ObjectPathId="55"></ObjectPath>
+		<Method Name="SetFieldValue" Id="57" ObjectPathId="55">
+			<Parameters>
+				<Parameter Type="String">Title</Parameter>
+				<Parameter Type="String">My New Item!3</Parameter>
+			</Parameters>
+		</Method>
+		<Method Name="Update" Id="58" ObjectPathId="55"></Method>
+		<Query Id="59" ObjectPathId="55">
+			<Query SelectAllProperties="true">
+				<Properties>
+					<Property Name="FileSystemObjectType" ScalarProperty="true"></Property>
+					<Property Name="Id" ScalarProperty="true"></Property>
+					<Property Name="Title" ScalarProperty="true"></Property>
+				</Properties>
+			</Query>
+		</Query>
+		<ObjectPath Id="61" ObjectPathId="60"></ObjectPath>
+		<Method Name="SetFieldValue" Id="62" ObjectPathId="60">
+			<Parameters>
+				<Parameter Type="String">Title</Parameter>
+				<Parameter Type="String">My New Item!4</Parameter>
+			</Parameters>
+		</Method>
+		<Method Name="Update" Id="63" ObjectPathId="60"></Method>
+		<Query Id="64" ObjectPathId="60">
+			<Query SelectAllProperties="true">
+				<Properties>
+					<Property Name="FileSystemObjectType" ScalarProperty="true"></Property>
+					<Property Name="Id" ScalarProperty="true"></Property>
+					<Property Name="Title" ScalarProperty="true"></Property>
+				</Properties>
+			</Query>
+		</Query>
+	</Actions>
+	<ObjectPaths>
+		<Method Id="40" ParentId="6" Name="AddItem">
+			<Parameters>
+				<Parameter TypeId="{54cdbee5-0897-44ac-829f-411557fa11be}">
+					<Property Name="FolderUrl" Type="Null"></Property>
+					<Property Name="LeafName" Type="Null"></Property>
+					<Property Name="UnderlyingObjectType" Type="Number">0</Property>
+				</Parameter>
+			</Parameters>
+		</Method>
+		<Method Id="45" ParentId="6" Name="AddItem">
+			<Parameters>
+				<Parameter TypeId="{54cdbee5-0897-44ac-829f-411557fa11be}">
+					<Property Name="FolderUrl" Type="Null"></Property>
+					<Property Name="LeafName" Type="Null"></Property>
+					<Property Name="UnderlyingObjectType" Type="Number">0</Property>
+				</Parameter>
+			</Parameters>
+		</Method>
+		<Method Id="50" ParentId="6" Name="AddItem">
+			<Parameters>
+				<Parameter TypeId="{54cdbee5-0897-44ac-829f-411557fa11be}">
+					<Property Name="FolderUrl" Type="Null"></Property>
+					<Property Name="LeafName" Type="Null"></Property>
+					<Property Name="UnderlyingObjectType" Type="Number">0</Property>
+				</Parameter>
+			</Parameters>
+		</Method>
+		<Method Id="55" ParentId="6" Name="AddItem">
+			<Parameters>
+				<Parameter TypeId="{54cdbee5-0897-44ac-829f-411557fa11be}">
+					<Property Name="FolderUrl" Type="Null"></Property>
+					<Property Name="LeafName" Type="Null"></Property>
+					<Property Name="UnderlyingObjectType" Type="Number">0</Property>
+				</Parameter>
+			</Parameters>
+		</Method>
+		<Method Id="60" ParentId="6" Name="AddItem">
+			<Parameters>
+				<Parameter TypeId="{54cdbee5-0897-44ac-829f-411557fa11be}">
+					<Property Name="FolderUrl" Type="Null"></Property>
+					<Property Name="LeafName" Type="Null"></Property>
+					<Property Name="UnderlyingObjectType" Type="Number">0</Property>
+				</Parameter>
+			</Parameters>
+		</Method>
+		<Identity Id="6" Name="740c6a0b-85e2-48a0-a494-e0f1759d4aa7:site:5b2a524b-edc8-4da9-8904-4d28943abb39:web:26fc0fbf-d565-4c81-a9f5-ac858f67255a:list:a1e33484-c701-484e-8023-3ad360c23022"></Identity>
+	</ObjectPaths>
+</Request>
+view rawbatchadd.xml hosted with ❤ by GitHub
+
+
+Hope you enjoyed this blog post. Happy SharePointing!
+
+Addendum: I would also like to point out one of the hidden gems of the SharePoint world: if you are using Server Side Code (Full Trust), there is a similar batch method available called SPWeb.ProcessBatchData which can be used to bulk add, edit and delete list items. This is really helpful because it can operate on large number of items at once without making repeated calls to the database.
+Posted by Vardhaman Deshpande at 7:47 pm   
+Email This
+BlogThis!
+Share to Twitter
+Share to Facebook
+Share to Pinterest
