@@ -1,0 +1,77 @@
+https://nikpatel.net/2011/04/27/use-splongoperation-to-display-sharepoint-processing-page-for-lengthy-operations/
+
+Use SPLongOperation to display SharePoint Processing Page for Lengthy Operations and avoid Timeout Issues
+Posted on April 27, 2011 by Nik Patel
+There are many great hidden features in SharePoint like Skewer Click in SharePoint Designer 2010 or Related Item Views in SharePoint Designer 2010, SPLongOperation is just one of those hidden features. SPLongOperation may be unknown for many SharePoint developers even though it exists since MOSS 2007 days but it’s part of daily end-user life. SPLongOperation is nothing but spinning wheel animated image screen shows up for many of lengthy SharePoint operations like site creation, site redirection, or site deletion.
+
+http://msdn.microsoft.com/en-us/library/microsoft.sharepoint.splongoperation.aspx
+
+
+
+As a SharePoint Developer, you can wrap your lengthy operations code with the SPLongOperation to display the spinning wheel processing screen whenever you are executing long duration code-block to improve the user experience. After invoking SPLongOperation object, you can start and stop the long operation using Begin() and End() methods. Alternatively, you can use the LeadingHTML and TrainingHTML properties to customize the message on the processing screen.
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+protected void btnProvisionSites_Click(object sender, EventArgs e)
+{
+    //Long Operation Code
+    using (SPLongOperation longOperation = new SPLongOperation(this.Page))
+    {
+        //Custom Messages on the Spinning Wheel Screen
+        longOperation.LeadingHTML = "Provisioning Sites";
+        longOperation.TrailingHTML = "Please wait while the sites are being provisioned.";
+ 
+        //Start the long operation
+        longOperation.Begin();
+ 
+        //Your Long Operation Code Goes Here...
+        // e.g. Site provisioning code
+ 
+        //End the long operation
+        string redirectURL = SPContext.Current.Web.Url + "/SitePages/SiteProvisioning.aspx";
+        longOperation.End(redirectURL);
+    }
+}
+Please note that SPLongOperation would require redirecting the user to the destination page. This destination page can be anything from confirmation page to the same page where execution process started. If you are performing error reporting during page post back, I would recommend that you use the HttpContext.Current.Cache to cache the error messages and display the error messages during page loading process.
+
+Although it’s not documented anywhere, another major benefit of SPOperation is it resolves typical SharePoint timeout issues. As many of us knows, SharePoint requests would timeout after 6 minutes and these executionTimeout settings are set in the web.config file located at the <SharePoint Root>\Template\Layouts directory.
+
+1
+2
+3
+4
+5
+6
+<system.web>
+    <compilation batch="false" batchTimeout="600" maxBatchSize="10000" maxBatchGeneratedFileSize="10000" />
+    <customErrors mode="On" />
+    <httpRuntime executionTimeout="360" />
+    <globalization fileEncoding="utf-8" />
+</system.web>
+http://geekswithblogs.net/DennisBottjer/archive/2009/04/13/increase-sharepoint-execution-timeout.aspx
+
+Unlike above link, I wouldn’t recommend updating SharePointRoot web.config settings but I would suggest using SPLongOperation to execute lengthy operations. I was able to run very complex custom site provisioning request without timing out for more than 10 minutes using SPLongOperation. Without SPLongOperation, same code would timeout after 6 minutes.
+
+References: There are multiple ways you can use the SPLongOperation as given in following articles –
+http://blogs.inetium.com/blogs/bcaauwe/archive/2007/12/20/splongoperation-sharepoint-spin-wheel.aspx
+http://howtosharepoint.blogspot.com/2010/04/how-to-programatically-show-processing.html
+
+Enjoy..
