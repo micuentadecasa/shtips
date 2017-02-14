@@ -1,0 +1,6 @@
+when doing a query we can hit the list trhotelling so is better:
+
+- to create indexes -> in list settings, abajo del todo index columns y añadir la que utilicemos en la consulta SQPQUERY
+- si no nos dejase crear indexes podemos utilizar elevated pero teniendo en cuenta que no es eficiente y que la consulta nos da lo que vería el 
+superadmin (ejemplo en aicquestionsService)
+- otra forma es utilizar contentIterator pero no lo he probado..
