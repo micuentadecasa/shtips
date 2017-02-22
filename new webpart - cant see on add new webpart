@@ -1,2 +1,4 @@
 si subimos una solución con un webpart nuevo puede que no se vea (cuando tratamos de insertarlo) 
 hasta que deshabilitemos y habilitemos de nuevo la feautre
+
+si la feature es a nivel de site tendremos que hacerlo en el central administration
