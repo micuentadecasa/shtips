@@ -1,0 +1,26 @@
+when trying to publicate (debug or run) a "report server project" with vs2013 it goes to publish and got the error
+‘NT AUTHORITY\ANONYMOUS LOGON’ Error
+
+the problem is that is enabled anonymous access in the web
+
+https://sharepointdevelopmentblog.wordpress.com/2016/02/15/report-bulider-3-0-nt-authorityanonymous-logon-error/
+
+the problem is that anonymous access for the web is enabled so the user that tries to edit the report is the unauthenticated account
+disabling the anynomous access solves it
+
+I was trying to edit some of rdl resports on one server and get this kind of error :
+
+​he permissions granted to user ‘NT AUTHORITY\ANONYMOUS LOGON’ are insufficient for performing this operation. —> Microsoft.ReportingServices.Diagnostics.Utilities.AccessDeniedException: The permissions granted to user ‘NT AUTHORITY\ANONYMOUS LOGON’ are insufficient for performing this operation.​
+
+when I googled this error it gets me lots of soultions from the internet however none of them couldn’t fix my problem or the soultion was not fitting exacly to my problem in my opinion.
+
+I went to Central Administration of my SharePoint and try workaround with it and this was the key to fix my problem.
+
+Open your “Manage Web Applications” in “CA” and then click on your Web App where problem exist, then choose the “Authentication Providers”
+ 
+
+and choose the “Zone” which you “Web App” is using
+ 
+uncheck the box of the “anonumous access” setting and you done !
+
+
