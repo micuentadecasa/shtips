@@ -1,0 +1,6 @@
+when trying to use reporting services configuration manager it doesn't works, it is because when installing the reporting
+services in sharepoint integrated mode it doesn't install the report server neither the web for configuring the report server
+so all the information about configuring it is incorrect because they talk about report server in alone mode not sharepoint mode
+
+so even there exists the url http://xxxx/_vti_bin/reportserver all the configuration is done via the central administration, 
+for example the rights are now permissions of sharepoint
