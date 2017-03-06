@@ -1,5 +1,232 @@
 in libraries the pdf open on word web app because it is stablished on office web apps server..
 
+###########################################################################################################
+http://bliblablog.net/opening-pdf-documents-sharepoint-2013-word-web-app-vs-default-pdf-reader/
+
+this solution only removes an action so search and pdf preview on search still works, important to read it...
+
+Opening PDF documents in SharePoint 2013 (Word Web App vs. default PDF reader)
+BY MARKUS · DECEMBER 3, 2014
+
+When using OWA (Office Web Apps) in SharePoint 2013 along with PDF Previews in the Search Result, PDF documents will always open in Word Web App.
+
+
+Implementation
+When implementing OWA (Office Web Apps) for SharePoint 2013, you will get the very useful feature of pre-viewing, opening and even editing Office documents in the Web Browser.
+There are several good articles around the web covering installation and configuration, e.g.
+
+Office Web Apps 2013 Server Install and Configuration
+Configure Office Web Apps for SharePoint 2013
+After the OWA implementation, you could even offer pre-views of PDF documents within SharePoint Search (which provides this feature only for Office documents by default).
+
+Here is one article covering that topic:
+
+SharePoint 2013: Enabling PDF Previews with Office Web Apps 2013 March 2013 update
+
+Problem
+This configuration leads to the issue, that PDF documents anywhere in SharePoint will always open in “Word Web App”.
+
+The following article describes how to change that behaviour:
+Control whether PDFs open in Word Web App or the default PDF reader
+
+If you would follow the steps and remove the binding by executing the following PowerShell command:
+
+
+Get-SPWOPIBinding –Application "WordPDF" | Remove-SPWOPIBinding -Confirm:$false
+1
+Get-SPWOPIBinding –Application "WordPDF" | Remove-SPWOPIBinding -Confirm:$false
+you end up in the situation, where PDF documents will always open in the default PDF reader (which is OK) but also the preview for PDF documents not working anymore (which is kind of sad).
+
+The following bindings will get removed by that command:
+
+
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : view
+IsDefaultAction : True
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : imagepreview
+IsDefaultAction : False
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : interactivepreview
+IsDefaultAction : False
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : embedview
+IsDefaultAction : False
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+Approach
+One approach could be the following:
+Only remove the following binding:
+
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : view
+IsDefaultAction : True
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : view
+IsDefaultAction : True
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+ 
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : imagepreview
+IsDefaultAction : False
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+ 
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : interactivepreview
+IsDefaultAction : False
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+ 
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : embedview
+IsDefaultAction : False
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+Approach
+One approach could be the following:
+Only remove the following binding:
+ 
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : view
+IsDefaultAction : True
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+ 
+
+Approach
+One approach could be the following.
+
+Only remove the following binding:
+
+
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : view
+IsDefaultAction : True
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+1
+2
+3
+4
+5
+6
+7
+Application : WordPdf
+Extension : PDF
+ProgId :
+Action : view
+IsDefaultAction : True
+ServerName : OWAServer.Domain.COM
+WopiZone : internal-http
+by running
+
+
+Get-SPWOPIBinding -Application "WordPDF" -Action "View" | Remove-SPWOPIBinding
+1
+Get-SPWOPIBinding -Application "WordPDF" -Action "View" | Remove-SPWOPIBinding
+After that, PDF document will be opened on the default PDF reader, the preview of PDF docments will work, but: as soon as you click on the linf for the document, you will end-up in an error message:
+
+Sorry, something went wrong
+
+ULS log output:
+
+SharePoint Foundation WOPI ah6ud Unexpected Exiting GetWOPITargetInternal Early – GenerateWacUrl failed to produce a URL/actionEntry for file file.pdf with extension ‘PDF’ StackTrace: at Microsoft.SharePoint.Utilities.SPWOPIHost.GetWOPITargetInternal(HttpContext httpContext, SPWeb web, Object& spPrimeObject, SPWOPIAction& requestedAction, SPRegionalSettings spSettings, String& wopiAppUrl, String& wopiFavIconUrl, String& wopiAccessToken, Int64& wopiAccessTokenTtl, String& errorMessageToDisplay, String& redirectUrl) at Microsoft.SharePoint.ApplicationPages.WOPIFrameHelper.OnLoadHelper(WOPIFrame frame) at Microsoft.SharePoint.ApplicationPages.WOPIFrameHelper.OnLoad(WOPIFrame frame) at System.Web.UI.Control.Lo… 6624d29c-fce6-c0b2-e30c-5ddf138f8241
+
+SharePoint Foundation WOPI ah6ud Unexpected …adRecursive() at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint) at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint) at System.Web.HttpContext.InvokeCancellableCallback(WaitCallback callback, Object state) at System.Web.UI.Page.LegacyAsyncPageBeginProcessRequest(HttpContext context, AsyncCallback callback, Object extraData) at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute() at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously) at System.Web.HttpApplication.PipelineStepManager.ResumeSteps(Exception error) at System.Web.HttpApplication.B…
+
+SharePoint Foundation WOPI ah6ud Unexpected …eginProcessRequestNotification(HttpContext context, AsyncCallback cb) at System.Web.HttpRuntime.ProcessRequestNotificationPrivate(IIS7WorkerRequest wr, HttpContext context) at System.Web.Hosting.PipelineRuntime.ProcessRequestNotificationHelper(IntPtr rootedObjectsPointer, IntPtr nativeRequestContext, IntPtr moduleData, Int32 flags) at System.Web.Hosting.PipelineRuntime.ProcessRequestNotification(IntPtr rootedObjectsPointer, IntPtr nativeRequestContext, IntPtr moduleData, Int32 flags) at System.Web.Hosting.UnsafeIISMethods.MgdIndicateCompletion(IntPtr pHandler, RequestNotificationStatus& notificationStatus) at System.Web.Hosting.UnsafeIISMethods.MgdIndicateCompletion(IntPtr pHandler, RequestNotificationStatus& notificationStatus) at System.Web.Hosting.PipelineRuntime…
+SharePoint Foundation WOPI ah6ud Unexpected ….ProcessRequestNotificationHelper(IntPtr rootedObjectsPointer, IntPtr nativeRequestContext, IntPtr moduleData, Int32 flags) at System.Web.Hosting.PipelineRuntime.ProcessRequestNotification(IntPtr rootedObjectsPointer, IntPtr nativeRequestContext, IntPtr moduleData, Int32 flags) 6624d29c-fce6-c0b2-e30c-5ddf138f8241
+
+This is because the binding for WordPdf has not default action defined anymore (you deleted the default action “view” in the previous step).
+
+Therefore, define another default action by running the following PowerShell command:
+
+
+Get-SPWOPIBinding -Action "embedview" -Application "WordPdf"| Set-SPWOPIBinding -DefaultAction
+1
+Get-SPWOPIBinding -Action "embedview" -Application "WordPdf"| Set-SPWOPIBinding -DefaultAction
+I chose “embedview” as “view” is not an option anymore.
+
+After that, your PDF documents will be opened in the default PDF reader, the preview works and Word Web App will present the PDF documents in the “embedview”.
+
+##################################
 https://codtron.wordpress.com/2016/01/20/sharepoint-2013-open-pdf-in-default-pdf-reader-instead-of-office-web-apps/
 
 When users open a PDF file from a SharePoint document library that uses Office Web Apps Server, the default behavior is to open the PDF in Word Web App. If this isn’t the behavior you want, or if your users are having trouble opening PDFs on smartphones, you can use Windows PowerShell commands to make PDFs open in your default PDF reader instead. Here’s how:
