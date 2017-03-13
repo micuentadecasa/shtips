@@ -1,0 +1,24 @@
+
+follow instructions on 
+
+http://www.macaalay.com/2013/10/22/installing-integrated-reporting-services-on-sharepoint-2013-in-7-easy-steps/
+
+for installation on farm 
+para hacerlo en una farm con varios servidores
+http://rajeshagadi.blogspot.com.es/2013/07/installing-reporting-services-in.html
+
+en este se explica como crear las librerías
+
+http://www.cognitiveinfo.com/2013/ssrs-2012-sharepoint-2013-integrated-mode/
+
+------------------------
+
+PerformancePoint services uses Secure store service 
+
+if Secure store service is not running then go to central-> manage services on server-> start , then go to Central->manage service applications
+and if not exits create a new Secure Store service application, then follow this
+
+https://radekle.wordpress.com/2010/06/01/performancepoint-services-not-configured-properly-%E2%80%93-common-issue/
+
+that solves a bug with performancepoint...
+
