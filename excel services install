@@ -7,3 +7,7 @@ it seems that powerpivot works without the powerpivot service but when it has to
 a SSAS server that installs the powerpivot service
 
 in the configuration of the excel service the last part is about the SSAS server...
+
+for later investigation
+https://blogs.msdn.microsoft.com/analysisservices/2012/08/02/verifying-the-excel-services-configuration-for-powerpivot-in-sharepoint-2013/
+
