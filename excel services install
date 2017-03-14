@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=ifSRe6rCd28
+
+for installing the powerpivot service
+https://www.youtube.com/watch?v=Vhr34aSrLIA
+
+it seems that powerpivot works without the powerpivot service but when it has to refresh the data it has to have 
+a SSAS server that installs the powerpivot service
+
+in the configuration of the excel service the last part is about the SSAS server...
