@@ -1,0 +1,8 @@
+
+if we move a template .xsn or try to open on other server it will fail and will say that it comes from another server
+
+the trick is never use open, we have to right click on Design, not open because open will try to enter data in the infopath,
+it tries to use the infopath as editable...
+
+
+http://www.bizsupportonline.net/blog/2010/open-infopath-form-template-moved-copied-different-location-computer.htm
