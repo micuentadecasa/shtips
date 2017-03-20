@@ -1,0 +1,15 @@
+
+
+podemos utilizar una cuenta de google para hacer relay pero hay que activar algo que llaman "aplicaciones menos seguras" 
+por lo tanto lo mejor es activarlo sólo para las pruebas...
+
+en la dirección https://www.google.com/settin:gs/security/lesssecureapps?rfn=27&rfnc=1&et=0&asae=2 podemos habilitar o deshabilitarlo
+
+luego seguir los pasos de:
+
+https://pgbhoyar.com/2015/12/22/how-to-setup-gmail-as-smtp-relay-server-in-sharepoint/
+
+
+
+
+
