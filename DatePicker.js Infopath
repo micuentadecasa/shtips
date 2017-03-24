@@ -2,6 +2,9 @@ en infopath con Chrome tenemos el problema de que al pinchar en el datepicker el
 es un problema con el datepicker.js que está en
 C:\Program Files\Common Files\Microsoft Shared\Web Server Extensions\15\TEMPLATE\LAYOUTS
 
+en este github he subido los archivos necesarios datepicker.js y datepicker.debug.js por si vuelve a pasar 
+porque si hacemos un update de CU o similar habrá que volver a ponerlos...
+
 
 una posible solución en 
 http://sharepoint.stackexchange.com/questions/116399/sharepoint-datepicker-jumps-to-top-in-chrome
