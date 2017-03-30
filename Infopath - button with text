@@ -1,0 +1,9 @@
+if we want a button with so much text and line breaks we have to create an xml and create a new data connection - retrieve from xml 
+(when getting the xml choose Resource and add the xml as resource)
+
+Note: in design the text is not visible ...
+
+http://www.bizsupportonline.net/blog/2010/display-button-text-label-infopath-two-lines.htm
+
+to update the xml click on Data - Resources y Add , when asked click on replace and the data will be refreshed...
+
