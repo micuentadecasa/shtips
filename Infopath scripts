@@ -1,0 +1,31 @@
+para saber los campos utilizar este script
+
+add-pssnapin microsoft.sharepoint.powershell
+$web = Get-SPWeb http://xxx
+$list = $web.Lists["Risk Register"]
+#$list.fields | select title | sort title | ft -AutoSize# $field = $list.Fields.GetFieldByInternalName("fieldinternalname");
+ $list.fields | select Title, InternalName, xpath, Hidden, Sealed, CanBeDeleted | where {$_.Hidden -eq $false} | sort title | ft -AutoSize
+
+
+
+también podemos encontrarnos con campos duplicados, para eliminarlos utilizar este script
+
+$web = Get-SPWeb “http://xxx”   
+$list = $web.Lists["Risk Register"]   
+$field = $list.Fields["Location"]   
+# $field = $list.Fields.GetFieldByInternalName("Location0");
+$field.Allowdeletion = $true  
+$field.Sealed = $false  
+$field.Delete()     
+$list.Update()  
+
+
+y también podemos encontrarnos con que la referencia xpath esté mal para ello
+
+$web = Get-SPWeb “http://xxxx”   
+$list = $web.Lists["Risk Register"]   
+$field = $list.Fields["Location"]   
+# $field = $list.Fields.GetFieldByInternalName("fieldinternalname"); 
+$field.xpath = "/my:myFields/my:Location"
+$field.Update() 
+$list.Update()   
