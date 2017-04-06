@@ -1,0 +1,17 @@
+http://sharepointfruity.blogspot.com.es/2012/09/infopath-deployment-using-powershell.html
+
+10.To Uninstall the existing xsn Form Template. Type in the Management shell
+
+Uninstall-SPInfoPathFormTemplate -Identity Exampleform.xsn
+
+11.Install the new solution based on the .xsn file path. For example, the .xsn is located in drive c:/
+
+Install-SPInfoPathFormTemplate -Path C:\Form.xsn
+
+12.To disable the feature on the site collection level, type in the management shell. For example, the site collection URL is http://SPSite.
+
+Disable-SPInfoPathFormTemplate -Identity "Form.xsn" -Site http://SPSite 
+
+13.To enable the feature on the site collection level, type in the management shell. For example, the site collection URL is http://SPSite.
+
+Enable-SPInfoPathFormTemplate -Identity "Form.xsn" -Site "http://SPSite"
