@@ -1,0 +1,29 @@
+http://sharepointplays.blogspot.com.es/2015/06/updating-infopath-forms-and-udcx-files.html
+
+Programmatically Updating the Infopath forms and UDCX files after migration - SharePoint Powershell
+Hi All,
+ Today we will see about Infopath. We had a SharePoint migration in our company from 2010 to 2013. This Powershell cmdlet helped very much in reducing the manual time for updating the data connections in the Infopath forms.
+
+ Once migration is done, the Infopath will be still pointing to the Old URLs in the data Connections.
+Example: If the Old URL is something like "http://contoso2010.Company.com" and the New URL is like "http://contoso2013.Company.com", and after migration also the Data Connections will be pointing towards "http://contoso2010.Company.com". This includes the UDCX files also.
+
+If there are only few forms, we can change it easily by following the below method.
+
+For Updating in the forms : Just open the form in the Infopath designer, in the "DATA" tab click on "Data Connections". Check whether it is poinint towards our new URL. If not update the same and re-publish.
+
+For Updating the UDCX files : Open the Data Connections Library and download the files to the Loca. Open the files in the notepad and change the "Web URL" and "List ID" parameters to the latest.
+
+The above method will be helpful only if there are few forms. If there are more forms to be manually updated you can always go for the below PowerShell method.
+
+
+The Update-SPInfoPathUserFileUrl cmd-let will upgrade form template and data connection files as per the parameter we give in the cmdlet. The update will access ALL files (except ASPX files) in any Data Connection library anywhere in the site and Update.
+
+CMD-LET is
+
+Get-SPWebApplication http://contoso2013 | Update-SPInfoPathUserFileUrl-find "http://contoso2010" -replace "http://contoso2013"
+
+This example updates data connections in InfoPath form templates and universal data connection files, for all content under the Web application http://contoso2013. Data connections that reference http://contoso2010 are updated to reference http://contoso2013.
+
+This also works for Admin approved Infopath forms :Update-SPInfoPathAdminFileURL -find "http://contoso2010" -replace "http://contoso2013".
+
+The same method could be followed when moving the forms from Test to Production.
