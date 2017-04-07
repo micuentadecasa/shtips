@@ -1,0 +1,8 @@
+para sacar en moustache texto en html tenemos que utilizar tres brackets en vez de dos
+
+también es interesante utilizar el htmlagilitypack para limpiar el html por si hay tags mal cerrados
+
+http://stackoverflow.com/questions/12113425/itextsharp-error-on-trying-to-parse-html-for-pdf-conversion
+
+https://www.nuget.org/packages/HtmlAgilityPack
+
